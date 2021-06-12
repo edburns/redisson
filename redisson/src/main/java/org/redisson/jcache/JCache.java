@@ -57,6 +57,9 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * JCache implementation
  * 
@@ -79,6 +82,7 @@ public class JCache<K, V> extends RedissonObject implements Cache<K, V>, CacheAs
     private CacheWriter<K, V> cacheWriter;
     private boolean closed;
     private boolean hasOwnRedisson;
+    private final Logger log = LoggerFactory.getLogger(getClass());
     
     /*
      * No locking required in atomic execution mode.
@@ -1122,6 +1126,8 @@ public class JCache<K, V> extends RedissonObject implements Cache<K, V>, CacheAs
         if (value == null) {
             throw new NullPointerException();
         }
+
+        log.info("debug: edburns: putting " + key + "=" + value + ".");
         
         RPromise<Void> result = new RedissonPromise<>();
         long startTime = currentNanoTime();

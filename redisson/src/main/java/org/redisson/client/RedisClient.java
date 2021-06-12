@@ -52,6 +52,9 @@ import io.netty.util.Timer;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.FutureListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Low-level Redis client
  * 
@@ -76,6 +79,8 @@ public final class RedisClient {
     private boolean hasOwnExecutor;
     private boolean hasOwnGroup;
     private boolean hasOwnResolver;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     public static RedisClient create(RedisClientConfig config) {
         return new RedisClient(config);
@@ -228,6 +233,8 @@ public final class RedisClient {
                     }
 
                     if (future.isSuccess()) {
+                        log.info("debug: edburns: Connecting to Redis cache at " + uri + ".");
+                                  
                         final RedisConnection c = RedisConnection.getFrom(future.channel());
                         c.getConnectionPromise().onComplete((res, e) -> {
                             bootstrap.config().group().execute(new Runnable() {
